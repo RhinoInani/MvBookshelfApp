@@ -1,4 +1,4 @@
-# mv_bookshelf
+# Mv Bookshelf
 
 The official MV Bookshelf App.
 This app will remind users to finish their weekly reading, upcoming meetings, and more club related activities.

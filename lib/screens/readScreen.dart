@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mv_bookshelf/userSettings.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PDFReader extends StatefulWidget {
@@ -13,7 +14,6 @@ class PDFReader extends StatefulWidget {
 
 class _PDFReaderState extends State<PDFReader> {
   PdfViewerController _pdfViewerController;
-  bool phone;
   int sensitivity = 100;
   int pageNum = 0;
   int totalPages = 0;
@@ -65,7 +65,6 @@ class _PDFReaderState extends State<PDFReader> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          int valueSelected = pageNum;
           return AlertDialog(
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -106,9 +105,7 @@ class _PDFReaderState extends State<PDFReader> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    setState(() {
-      phone = size.width < 600 ? true : false;
-    });
+    setState(() {});
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

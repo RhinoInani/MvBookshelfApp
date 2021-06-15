@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
+import 'package:mv_bookshelf/userSettings.dart';
 
 import '../firebaseReturn.dart';
 
@@ -17,31 +18,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool _initialized = false;
-  bool _error = false;
-
   void initializeFlutterFire() async {
     try {
       await Firebase.initializeApp();
       setState(() async {
-        _initialized = true;
-        // twrPdfUrl = await FirebaseStorage.instance
-        //     .ref('/week0/2021_AP_Physics_1_Exam_FRQ.pdf')
-        //     .getDownloadURL();
-        // twrImageUrl = await FirebaseStorage.instance
-        //     .ref('/week0/background2.JPG')
-        //     .getDownloadURL();
-        // lwrImageUrl = twrImageUrl;
-        // twrTitle = await FirebaseDatabase.instance
-        //     .reference()
-        //     .child('Titles')
-        //     .child('Week1')
-        //     .once()
-        //     .then((data) {
-        //   print(data.value);
-        //   return data.value;
-        // });
-
         await _readTitles();
 
         await _readPdfUrl();
@@ -51,9 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await _readAuthor();
       });
     } catch (e) {
-      setState(() {
-        _error = true;
-      });
+      setState(() {});
     }
   }
 
@@ -129,6 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     initializeFlutterFire();
     super.initState();
+
     Timer(new Duration(milliseconds: 1500), () {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {
@@ -139,6 +118,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    phone = size.width < 600 ? true : false;
     return Scaffold();
   }
 }

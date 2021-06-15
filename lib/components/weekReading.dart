@@ -33,7 +33,7 @@ class WeekReading extends StatelessWidget {
               children: [
                 TextSpan(text: week),
                 TextSpan(
-                    text: weekBold,
+                    text: "reading...",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ))

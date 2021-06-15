@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/components/weekReading.dart';
 import 'package:mv_bookshelf/constants.dart';
 
@@ -11,34 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // bool _initialized = false;
-  // bool _error = false;
-  //
-  // void initializeFlutterFire() async {
-  //   try {
-  //     await Firebase.initializeApp();
-  //     setState(() async {
-  //       _initialized = true;
-  //       pdfUrl = await FirebaseStorage.instance
-  //           .ref('/week0/2021_AP_Physics_1_Exam_FRQ.pdf')
-  //           .getDownloadURL();
-  //       readingImageUrl = await FirebaseStorage.instance
-  //           .ref('/week0/background2.JPG')
-  //           .getDownloadURL();
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       _error = true;
-  //     });
-  //   }
-  // }
-  //
-  // @override
-  // void initState() {
-  //   initializeFlutterFire();
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -60,29 +33,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "MV Bookshelf + logo",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: size.height * 0.04),
+                  style: TextStyle(fontSize: size.height * 0.03),
                 ),
                 Divider(
                   indent: size.width * 0.03,
                   endIndent: size.width * 0.03,
                 ),
-                ListTile(
-                  title: Text(
-                    "Previous Readings",
-                    style: TextStyle(
-                      //todo: fix sizing with phone boolean
-                      fontSize: size.width * 0.04,
-                    ),
-                  ),
-                  trailing: Icon(CupertinoIcons.book_fill),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                Divider(
-                  indent: size.width * 0.03,
-                  endIndent: size.width * 0.03,
-                ),
+                DrawerCard(
+                    size: size,
+                    text: "Home",
+                    icon: Icon(CupertinoIcons.home),
+                    press: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return HomeScreen();
+                      }));
+                    }),
+                DrawerCard(
+                    size: size,
+                    text: "Previous Readings",
+                    icon: Icon(CupertinoIcons.book_fill),
+                    press: () {
+                      Navigator.of(context).pop();
+                    }),
+                DrawerCard(
+                    size: size,
+                    text: "Upcoming Events",
+                    icon: Icon(CupertinoIcons.calendar),
+                    press: () {
+                      Navigator.of(context).pop();
+                    }),
+                DrawerCard(
+                    size: size,
+                    text: "Settings",
+                    icon: Icon(Icons.settings),
+                    press: () {
+                      Navigator.of(context).pop();
+                    }),
+                DrawerCard(
+                    size: size,
+                    text: "About Us",
+                    icon: Icon(CupertinoIcons.info_circle),
+                    press: () {
+                      Navigator.of(context).pop();
+                    }),
               ],
             ),
           ),
@@ -137,7 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
               WeekReading(
                 size: size,
                 week: "This weeks ",
-                weekBold: "reading",
               ),
               SizedBox(
                 height: size.height * 0.05,
@@ -145,7 +139,6 @@ class _HomeScreenState extends State<HomeScreen> {
               WeekReading(
                 size: size,
                 week: "Last weeks ",
-                weekBold: "reading",
               ),
               Column(
                 children: [

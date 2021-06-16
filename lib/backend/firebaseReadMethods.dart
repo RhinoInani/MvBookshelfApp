@@ -1,8 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:mv_bookshelf/firebaseReturn.dart';
+import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 
 void readTitles() async {
   int counterTitles = 0;
+  String tempReturn;
   await FirebaseDatabase.instance
       .reference()
       .child('Titles')
@@ -10,10 +11,14 @@ void readTitles() async {
       .onChildAdded
       .listen((event) {
     if (counterTitles == 0) {
-      lwrTitle = event.snapshot.value.toString();
+      tempReturn = event.snapshot.value.toString();
+      lwrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
+      lwrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
       counterTitles++;
     } else {
-      twrTitle = event.snapshot.value.toString();
+      tempReturn = event.snapshot.value.toString();
+      twrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
+      twrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
     }
   });
 }
@@ -52,23 +57,6 @@ void readImageUrl() async {
   });
 }
 
-void readAuthor() async {
-  int counterAuthor = 0;
-  await FirebaseDatabase.instance
-      .reference()
-      .child('Author')
-      .limitToLast(2)
-      .onChildAdded
-      .listen((event) {
-    if (counterAuthor == 0) {
-      lwrAuthor = event.snapshot.value.toString();
-      counterAuthor++;
-    } else {
-      twrAuthor = event.snapshot.value.toString();
-    }
-  });
-}
-
 void readUpcoming() async {
   String upcomingEvents;
   await FirebaseDatabase.instance
@@ -79,8 +67,9 @@ void readUpcoming() async {
       .listen((event) {
     upcomingEvents = event.snapshot.value.toString();
     upMonth =
-        int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf(",")));
+        int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf("/")));
     upDay = int.parse(upcomingEvents.substring(
-        upcomingEvents.indexOf(",") + 1, upcomingEvents.length));
+        upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf(",")));
+    upEvent = upcomingEvents.substring(upcomingEvents.indexOf(",") + 1);
   });
 }

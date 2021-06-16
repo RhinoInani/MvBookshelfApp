@@ -12,3 +12,4 @@ String lwrAuthor;
 
 int upMonth;
 int upDay;
+String upEvent;

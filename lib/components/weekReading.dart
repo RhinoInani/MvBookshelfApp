@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/twoSideRoundedButton.dart';
 import 'package:mv_bookshelf/constants.dart';
-import 'package:mv_bookshelf/firebaseReturn.dart';
 import 'package:mv_bookshelf/screens/readScreen.dart';
 
 //TODO: work on making chapters + section

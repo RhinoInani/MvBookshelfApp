@@ -1,14 +1,15 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/components/weekReading.dart';
 import 'package:mv_bookshelf/constants.dart';
-import 'package:mv_bookshelf/firebaseReturn.dart';
 import 'package:mv_bookshelf/userSettings.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,13 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     await readImageUrl();
 
-    await readAuthor();
-
     await readUpcoming();
   }
 
   void readTitles() async {
     int counterTitles = 0;
+    String tempReturn;
     await FirebaseDatabase.instance
         .reference()
         .child('Titles')
@@ -39,12 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
         .listen((event) {
       if (counterTitles == 0) {
         setState(() {
-          lwrTitle = event.snapshot.value.toString();
+          tempReturn = event.snapshot.value.toString();
+          lwrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
+          lwrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
           counterTitles++;
         });
       } else {
         setState(() {
-          twrTitle = event.snapshot.value.toString();
+          tempReturn = event.snapshot.value.toString();
+          twrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
+          twrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
         });
       }
     });
@@ -92,26 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void readAuthor() async {
-    int counterAuthor = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Author')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterAuthor == 0) {
-        setState(() {
-          lwrAuthor = event.snapshot.value.toString();
-        });
-      } else {
-        setState(() {
-          twrAuthor = event.snapshot.value.toString();
-        });
-      }
-    });
-  }
-
   void readUpcoming() async {
     String upcomingEvents;
     await FirebaseDatabase.instance
@@ -123,9 +107,10 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         upcomingEvents = event.snapshot.value.toString();
         upMonth =
-            int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf(",")));
+            int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf("/")));
         upDay = int.parse(upcomingEvents.substring(
-            upcomingEvents.indexOf(",") + 1, upcomingEvents.length));
+            upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf(",")));
+        upEvent = upcomingEvents.substring(upcomingEvents.indexOf(",") + 1);
       });
     });
   }
@@ -322,35 +307,46 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  "${DateFormat('MMMM').format(date)}",
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.04,
+                                Container(
+                                  child: AutoSizeText(
+                                    "${DateFormat('MMMM').format(date)}",
+                                    softWrap: true,
+                                    wrapWords: false,
+                                    style: TextStyle(
+                                      fontSize: size.width * 0.045,
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  "${DateFormat('d').format(date)}",
-                                  style: TextStyle(
-                                    fontSize: size.width * 0.17,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  child: AutoSizeText(
+                                    "${DateFormat('d').format(date)}",
+                                    softWrap: true,
+                                    wrapWords: false,
+                                    style: TextStyle(
+                                      fontSize: size.width * 0.17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
                         ),
-                        Positioned(child: Column()),
-                        // Positioned.fill(
-                        //     bottom: 0,
-                        //     child: Align(
-                        //       alignment: Alignment.bottomCenter,
-                        //       child: GestureDetector(
-                        //         onTap: () {},
-                        //         child: Container(
-                        //           child: Text("More"),
-                        //         ),
-                        //       ),
-                        //     ))
+                        Positioned.fill(
+                            right: size.width * 0.1,
+                            child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  width: size.width * 0.25,
+                                  child: AutoSizeText(
+                                    "$upEvent",
+                                    softWrap: true,
+                                    wrapWords: false,
+                                    style: TextStyle(
+                                        fontSize: size.width * 0.1,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )))
                       ],
                     ),
                   )),
@@ -364,5 +360,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

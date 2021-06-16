@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mv_bookshelf/firebaseReadMethods.dart';
+import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
 import 'package:mv_bookshelf/userSettings.dart';
 
@@ -21,13 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
       await Firebase.initializeApp();
       setState(() async {
         await readTitles();
-
         await readPdfUrl();
-
         await readImageUrl();
-
-        await readAuthor();
-
         await readUpcoming();
       });
     } catch (e) {

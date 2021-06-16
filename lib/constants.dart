@@ -6,3 +6,5 @@ const kIconColor = Color(0xFFF48A37);
 const kProgressIndicator = Color(0xFFBE7066);
 
 final kShadowColor = Color(0xFFD3D3D3).withOpacity(.84);
+
+const beigeGreen = Color.fromRGBO(110, 120, 107, 1);

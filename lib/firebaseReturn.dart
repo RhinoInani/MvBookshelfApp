@@ -9,3 +9,6 @@ String lwrPdfUrl;
 String lwrImageUrl;
 String lwrTitle;
 String lwrAuthor;
+
+int upMonth;
+int upDay;

@@ -1,1 +1,3 @@
 bool phone;
+
+String currentScreen;

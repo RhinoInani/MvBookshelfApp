@@ -1,10 +1,15 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/components/weekReading.dart';
 import 'package:mv_bookshelf/constants.dart';
+import 'package:mv_bookshelf/firebaseReturn.dart';
+import 'package:mv_bookshelf/userSettings.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,19 +17,135 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<void> _refresh() async {
+    await readTitles();
+
+    await readPdfUrl();
+
+    await readImageUrl();
+
+    await readAuthor();
+
+    await readUpcoming();
+  }
+
+  void readTitles() async {
+    int counterTitles = 0;
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Titles')
+        .limitToLast(2)
+        .onChildAdded
+        .listen((event) {
+      if (counterTitles == 0) {
+        setState(() {
+          lwrTitle = event.snapshot.value.toString();
+          counterTitles++;
+        });
+      } else {
+        setState(() {
+          twrTitle = event.snapshot.value.toString();
+        });
+      }
+    });
+  }
+
+  void readPdfUrl() async {
+    int counterPdf = 0;
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Pdf')
+        .limitToLast(2)
+        .onChildAdded
+        .listen((event) {
+      if (counterPdf == 0) {
+        setState(() {
+          lwrPdfUrl = event.snapshot.value.toString();
+          counterPdf++;
+        });
+      } else {
+        setState(() {
+          twrPdfUrl = event.snapshot.value.toString();
+        });
+      }
+    });
+  }
+
+  void readImageUrl() async {
+    int counterImage = 0;
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Image')
+        .limitToLast(2)
+        .onChildAdded
+        .listen((event) {
+      if (counterImage == 0) {
+        setState(() {
+          lwrImageUrl = event.snapshot.value.toString();
+          counterImage++;
+        });
+      } else {
+        setState(() {
+          twrImageUrl = event.snapshot.value.toString();
+        });
+      }
+    });
+  }
+
+  void readAuthor() async {
+    int counterAuthor = 0;
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Author')
+        .limitToLast(2)
+        .onChildAdded
+        .listen((event) {
+      if (counterAuthor == 0) {
+        setState(() {
+          lwrAuthor = event.snapshot.value.toString();
+        });
+      } else {
+        setState(() {
+          twrAuthor = event.snapshot.value.toString();
+        });
+      }
+    });
+  }
+
+  void readUpcoming() async {
+    String upcomingEvents;
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Upcoming')
+        .limitToLast(1)
+        .onChildAdded
+        .listen((event) {
+      setState(() {
+        upcomingEvents = event.snapshot.value.toString();
+        upMonth =
+            int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf(",")));
+        upDay = int.parse(upcomingEvents.substring(
+            upcomingEvents.indexOf(",") + 1, upcomingEvents.length));
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
     Size size = MediaQuery.of(context).size;
+
+    DateTime date = DateTime(DateTime.now().year, upMonth, upDay);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       drawer: Container(
         width: size.width * 0.8,
         child: Drawer(
           child: Container(
-            color: Color.fromRGBO(110, 120, 107, 0.85),
+            color: beigeGreen,
             child: ListView(
               children: [
                 SizedBox(
@@ -44,11 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     text: "Home",
                     icon: Icon(CupertinoIcons.home),
                     press: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return HomeScreen();
-                      }));
+                      if (currentScreen == "Home") {
+                        Navigator.of(context).pop();
+                      } else {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return HomeScreen();
+                        }));
+                      }
                     }),
                 DrawerCard(
                     size: size,
@@ -62,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     text: "Upcoming Events",
                     icon: Icon(CupertinoIcons.calendar),
                     press: () {
+                      print(DateTime.now().month);
                       Navigator.of(context).pop();
                     }),
                 DrawerCard(
@@ -97,9 +222,13 @@ class _HomeScreenState extends State<HomeScreen> {
             fit: BoxFit.fill,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: RefreshIndicator(
+          onRefresh: () {
+            return _refresh();
+          },
+          color: Color.fromRGBO(110, 120, 107, 0.85),
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: <Widget>[
               SizedBox(
                 height: size.height * .09,
@@ -110,7 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: RichText(
                     text: TextSpan(
                       style: GoogleFonts.notoSerif(
-                          textStyle: Theme.of(context).textTheme.headline3),
+                          textStyle: phone
+                              ? Theme.of(context).textTheme.headline3
+                              : Theme.of(context).textTheme.headline2),
                       children: [
                         TextSpan(text: "Mv "),
                         TextSpan(
@@ -134,13 +265,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 week: "This weeks ",
               ),
               SizedBox(
-                height: size.height * 0.05,
+                height: size.height * 0.04,
               ),
               WeekReading(
                 size: size,
                 week: "Last weeks ",
               ),
+              SizedBox(
+                height: size.height * 0.04,
+              ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: EdgeInsets.all(size.width * 0.03),
@@ -150,15 +285,77 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: size.height * 0.03, color: kBlackColor),
                           children: [
                             TextSpan(
-                              text: "Continue ",
+                              text: "Upcoming ",
                             ),
                             TextSpan(
-                                text: "reading...",
+                                text: "events...",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 )),
                           ]),
                     ),
+                  ),
+                  Center(
+                      child: Container(
+                    height: size.height * 0.2,
+                    width: size.width * 0.8,
+                    decoration: cardBoxDecoration(),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: size.height * 0.025,
+                          left: size.width * 0.05,
+                          child: Container(
+                            height: size.height * 0.15,
+                            width: size.height * 0.15,
+                            decoration: BoxDecoration(
+                                color: beigeGreen.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(26),
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(0, 8),
+                                    blurRadius: 10,
+                                    color: Colors.grey[400],
+                                  ),
+                                ]),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${DateFormat('MMMM').format(date)}",
+                                  style: TextStyle(
+                                    fontSize: size.width * 0.04,
+                                  ),
+                                ),
+                                Text(
+                                  "${DateFormat('d').format(date)}",
+                                  style: TextStyle(
+                                    fontSize: size.width * 0.17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(child: Column()),
+                        // Positioned.fill(
+                        //     bottom: 0,
+                        //     child: Align(
+                        //       alignment: Alignment.bottomCenter,
+                        //       child: GestureDetector(
+                        //         onTap: () {},
+                        //         child: Container(
+                        //           child: Text("More"),
+                        //         ),
+                        //       ),
+                        //     ))
+                      ],
+                    ),
+                  )),
+                  SizedBox(
+                    height: size.height * 0.1,
                   ),
                 ],
               ),

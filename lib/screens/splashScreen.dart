@@ -1,12 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:mv_bookshelf/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
 import 'package:mv_bookshelf/userSettings.dart';
-
-import '../firebaseReturn.dart';
 
 //todo: check connections, using connectivity package or some sort
 
@@ -22,92 +20,28 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       await Firebase.initializeApp();
       setState(() async {
-        await _readTitles();
+        await readTitles();
 
-        await _readPdfUrl();
+        await readPdfUrl();
 
-        await _readImageUrl();
+        await readImageUrl();
 
-        await _readAuthor();
+        await readAuthor();
+
+        await readUpcoming();
       });
     } catch (e) {
       setState(() {});
     }
   }
 
-  void _readTitles() async {
-    int counterTitles = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Titles')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterTitles == 0) {
-        lwrTitle = event.snapshot.value.toString();
-        counterTitles++;
-      } else {
-        twrTitle = event.snapshot.value.toString();
-      }
-    });
-  }
-
-  void _readPdfUrl() async {
-    int counterPdf = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Pdf')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterPdf == 0) {
-        lwrPdfUrl = event.snapshot.value.toString();
-        counterPdf++;
-      } else {
-        twrPdfUrl = event.snapshot.value.toString();
-      }
-    });
-  }
-
-  void _readImageUrl() async {
-    int counterImage = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Image')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterImage == 0) {
-        lwrImageUrl = event.snapshot.value.toString();
-        counterImage++;
-      } else {
-        twrImageUrl = event.snapshot.value.toString();
-      }
-    });
-  }
-
-  void _readAuthor() async {
-    int counterAuthor = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Author')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterAuthor == 0) {
-        lwrAuthor = event.snapshot.value.toString();
-        counterAuthor++;
-      } else {
-        twrAuthor = event.snapshot.value.toString();
-      }
-    });
-  }
-
   @override
   void initState() {
     initializeFlutterFire();
     super.initState();
-
+    setState(() {
+      currentScreen = "Home";
+    });
     Timer(new Duration(milliseconds: 1500), () {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) {

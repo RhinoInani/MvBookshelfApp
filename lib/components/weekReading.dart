@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/twoSideRoundedButton.dart';
 import 'package:mv_bookshelf/constants.dart';
 import 'package:mv_bookshelf/firebaseReturn.dart';
@@ -9,12 +10,10 @@ import 'package:mv_bookshelf/screens/readScreen.dart';
 
 class WeekReading extends StatelessWidget {
   final String week;
-  final String weekBold;
   const WeekReading({
     Key key,
     @required this.size,
     @required this.week,
-    this.weekBold,
   }) : super(key: key);
 
   final Size size;
@@ -63,13 +62,7 @@ class WeekReading extends StatelessWidget {
                   top: (size.height * 0.02) / 2,
                   height: size.height * 0.18,
                   child: Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 8),
-                        blurRadius: 10,
-                        color: Colors.grey[400],
-                      ),
-                    ]),
+                    decoration: cardBoxDecoration(),
                     child: ClipRRect(
                         child: Image.network(
                           week == "This weeks " ? twrImageUrl : lwrImageUrl,
@@ -80,6 +73,7 @@ class WeekReading extends StatelessWidget {
                 Positioned(
                     left: size.width * 0.4,
                     top: size.height * 0.02,
+                    height: size.height * 0.15,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

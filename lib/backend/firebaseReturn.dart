@@ -13,3 +13,8 @@ String lwrAuthor;
 int upMonth;
 int upDay;
 String upEvent;
+
+List<String> pdfUrl;
+List<String> imageUrl;
+List<String> title;
+List<String> author;

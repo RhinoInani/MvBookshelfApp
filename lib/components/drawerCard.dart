@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mv_bookshelf/userSettings.dart';
+import 'package:mv_bookshelf/backend/userSettings.dart';
 
 class DrawerCard extends StatelessWidget {
   const DrawerCard({

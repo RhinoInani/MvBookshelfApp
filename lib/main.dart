@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mv_bookshelf/screens/splashScreen.dart';
 
-import 'constants.dart';
+import 'backend/constants.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

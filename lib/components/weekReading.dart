@@ -1,60 +1,56 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:mv_bookshelf/backend/constants.dart';
 import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/twoSideRoundedButton.dart';
-import 'package:mv_bookshelf/constants.dart';
 import 'package:mv_bookshelf/screens/readScreen.dart';
 
 //TODO: work on making chapters + section
 
 class WeekReading extends StatelessWidget {
-  final String week;
   const WeekReading({
     Key key,
     @required this.size,
     @required this.week,
+    @required this.home,
   }) : super(key: key);
 
   final Size size;
+  final String week;
+  final bool home;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.all(size.width * 0.03),
-          child: RichText(
-            text: TextSpan(
-              style:
-                  TextStyle(fontSize: size.height * 0.03, color: kBlackColor),
-              children: [
-                TextSpan(text: week),
-                TextSpan(
-                    text: "reading...",
+        home
+            ? Padding(
+                padding: EdgeInsets.all(size.width * 0.03),
+                child: RichText(
+                  text: TextSpan(
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ))
-              ],
-            ),
-          ),
-        ),
+                        fontSize: size.height * 0.03, color: kBlackColor),
+                    children: [
+                      TextSpan(text: week),
+                      TextSpan(
+                          text: "reading...",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ))
+                    ],
+                  ),
+                ),
+              )
+            : SizedBox(
+                height: size.height * 0.03,
+              ),
         Center(
           child: Container(
             height: size.height * 0.2,
             width: size.width * 0.8,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(229, 224, 215, 0.9),
-              borderRadius: BorderRadius.circular(29),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 8),
-                  blurRadius: 10,
-                  color: Colors.grey[400],
-                ),
-              ],
-            ),
+            decoration: cardBoxDecoration(),
             child: Stack(
               children: [
                 Positioned(

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
+import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
-import 'package:mv_bookshelf/userSettings.dart';
 
 //todo: check connections, using connectivity package or some sort
 

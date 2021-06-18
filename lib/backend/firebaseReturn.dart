@@ -14,6 +14,7 @@ int upMonth;
 int upDay;
 String upEvent;
 
+int previousCounter = 5;
 List<String> pdfUrl;
 List<String> imageUrl;
 List<String> title;

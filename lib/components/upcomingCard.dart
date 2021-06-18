@@ -71,17 +71,18 @@ class UpcomingCard extends StatelessWidget {
                           softWrap: true,
                           wrapWords: false,
                           style: TextStyle(
-                            fontSize: size.width * 0.045,
+                            fontSize: size.height * 0.02,
                           ),
                         ),
                       ),
                       Container(
+                        height: size.height * 0.1,
                         child: AutoSizeText(
                           "${DateFormat('d').format(date)}",
                           softWrap: true,
                           wrapWords: false,
                           style: TextStyle(
-                            fontSize: size.width * 0.17,
+                            fontSize: size.height * 0.09,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

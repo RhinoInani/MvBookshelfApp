@@ -44,7 +44,7 @@ class WeekReading extends StatelessWidget {
                 ),
               )
             : SizedBox(
-                height: size.height * 0.03,
+                height: size.height * 0.05,
               ),
         Center(
           child: Container(

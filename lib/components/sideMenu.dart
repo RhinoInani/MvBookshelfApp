@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
+import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
@@ -31,10 +33,24 @@ class _SideMenuState extends State<SideMenu> {
               SizedBox(
                 height: widget.size.height * 0.02,
               ),
-              Text(
-                "MV Bookshelf + logo",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: widget.size.height * 0.03),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: widget.size.height * 0.01,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "MV Bookshelf",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: widget.size.height * 0.03),
+                    ),
+                    Image.asset(
+                      'assets/logo_transparent.png',
+                      height: widget.size.height * 0.1,
+                    ),
+                  ],
+                ),
               ),
               Divider(
                 indent: widget.size.width * 0.03,
@@ -61,13 +77,14 @@ class _SideMenuState extends State<SideMenu> {
                   size: widget.size,
                   text: "Previous Readings",
                   icon: Icon(CupertinoIcons.book_fill),
-                  press: () {
+                  press: () async {
                     if (currentScreen == "PR") {
                       Navigator.of(context).pop();
                     } else {
                       setState(() {
                         currentScreen = "PR";
                       });
+                      // await readAllPdf();
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return PreviousReadingsScreen();
@@ -101,5 +118,16 @@ class _SideMenuState extends State<SideMenu> {
         ),
       ),
     );
+  }
+
+  void readAllPdf() async {
+    await FirebaseDatabase.instance
+        .reference()
+        .child('Pdf')
+        .limitToLast(previousCounter)
+        .onChildAdded
+        .listen((event) {
+      pdfUrl.add(event.snapshot.value.toString());
+    });
   }
 }

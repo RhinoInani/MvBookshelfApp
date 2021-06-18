@@ -5,9 +5,13 @@ class ExtraPageHeader extends StatelessWidget {
   const ExtraPageHeader({
     Key key,
     @required this.size,
+    @required this.text,
+    @required this.boldText,
   }) : super(key: key);
 
   final Size size;
+  final String text;
+  final String boldText;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +24,9 @@ class ExtraPageHeader extends StatelessWidget {
               color: kBlackColor,
             ),
             children: [
-              TextSpan(text: "Previous "),
+              TextSpan(text: "$text "),
               TextSpan(
-                  text: "Readings",
+                  text: "$boldText",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ))

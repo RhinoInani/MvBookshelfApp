@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
-import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 import 'package:mv_bookshelf/components/twoSideRoundedButton.dart';
 import 'package:mv_bookshelf/screens/readScreen.dart';
@@ -14,11 +13,19 @@ class WeekReading extends StatelessWidget {
     @required this.size,
     @required this.week,
     @required this.home,
+    @required this.imageUrl,
+    @required this.pdfUrl,
+    @required this.title,
+    @required this.author,
   }) : super(key: key);
 
   final Size size;
   final String week;
   final bool home;
+  final String imageUrl;
+  final String pdfUrl;
+  final String title;
+  final String author;
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +67,7 @@ class WeekReading extends StatelessWidget {
                   child: Container(
                     decoration: cardBoxDecoration(),
                     child: ClipRRect(
-                        child: Image.network(
-                          week == "This weeks " ? twrImageUrl : lwrImageUrl,
-                        ),
+                        child: Image.network(imageUrl),
                         borderRadius: BorderRadius.circular(10)),
                   ),
                 ),
@@ -76,7 +81,7 @@ class WeekReading extends StatelessWidget {
                       children: [
                         Container(
                           child: AutoSizeText(
-                            week == "This weeks " ? twrTitle : lwrTitle,
+                            title,
                             softWrap: true,
                             wrapWords: true,
                             style: TextStyle(
@@ -87,7 +92,7 @@ class WeekReading extends StatelessWidget {
                         Container(
                           width: size.width * 0.38,
                           child: AutoSizeText(
-                            "By: ${week == "This weeks " ? twrAuthor : lwrAuthor}",
+                            "By: ${author}",
                             softWrap: true,
                             wrapWords: true,
                             style: TextStyle(
@@ -108,7 +113,7 @@ class WeekReading extends StatelessWidget {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
                         return PDFReader(
-                          pdfUrl: week == "This weeks " ? twrPdfUrl : lwrPdfUrl,
+                          pdfUrl: pdfUrl,
                         );
                       }));
                     },

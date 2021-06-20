@@ -16,7 +16,7 @@ dependencies:
   google_fonts: ^2.1.0
   firebase_core: ^1.2.0
   path_provider: ^2.0.2
-  syncfusion_flutter_pdfviewer: ^19.1.67-beta
+  syncfusion_flutter_pdfviewer: ^19.1.69-beta
   firebase_database: ^7.0.0
   auto_size_text: ^2.1.0
   connectivity: ^3.0.6
@@ -25,6 +25,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_launcher_name:
+  name: "Mv Bookshelf"
 
 flutter:
   uses-material-design: true

@@ -15,7 +15,7 @@ int upDay;
 String upEvent;
 
 int previousCounter = 5;
-List<String> pdfUrl;
-List<String> imageUrl;
-List<String> title;
-List<String> author;
+List<String> pdfUrl = List.generate(previousCounter, (index) => "test");
+List<String> imageUrl = List.generate(previousCounter, (index) => "test");
+List<String> title = List.generate(previousCounter, (index) => "test");
+List<String> author = List.generate(previousCounter, (index) => "test");

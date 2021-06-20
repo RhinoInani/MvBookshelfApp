@@ -84,7 +84,7 @@ class _SideMenuState extends State<SideMenu> {
                       setState(() {
                         currentScreen = "PR";
                       });
-                      // await readAllPdf();
+                      await readAll();
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return PreviousReadingsScreen();
@@ -120,14 +120,38 @@ class _SideMenuState extends State<SideMenu> {
     );
   }
 
-  void readAllPdf() async {
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Pdf')
+  void readAll() async {
+    dynamic ref = await FirebaseDatabase.instance.reference();
+    int pdfCounter = 0;
+    ref.child('Pdf').limitToLast(previousCounter).onChildAdded.listen((event) {
+      pdfUrl.insert(pdfCounter, event.snapshot.value.toString());
+      pdfCounter++;
+    });
+    int titlesCounter = 0;
+    String tempReturn = "";
+    ref
+        .child('Titles')
         .limitToLast(previousCounter)
         .onChildAdded
         .listen((event) {
-      pdfUrl.add(event.snapshot.value.toString());
+      tempReturn = event.snapshot.value.toString();
+      title.insert(
+          titlesCounter, tempReturn.substring(0, tempReturn.indexOf(",")));
+      print(titlesCounter);
+      print(title.elementAt(titlesCounter));
+      author.insert(
+          titlesCounter, tempReturn.substring(tempReturn.indexOf(",") + 1));
+      print(author.elementAt(titlesCounter));
+      titlesCounter++;
+    });
+    int imageCounter = 0;
+    ref
+        .child('Image')
+        .limitToLast(previousCounter)
+        .onChildAdded
+        .listen((event) {
+      imageUrl.insert(imageCounter, event.snapshot.value.toString());
+      imageCounter++;
     });
   }
 }

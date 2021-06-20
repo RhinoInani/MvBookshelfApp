@@ -181,6 +181,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: size,
                 week: "This weeks ",
                 home: true,
+                imageUrl: twrImageUrl,
+                pdfUrl: twrPdfUrl,
+                title: twrTitle,
+                author: twrAuthor,
               ),
               SizedBox(
                 height: size.height * 0.04,
@@ -189,6 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: size,
                 week: "Last weeks ",
                 home: true,
+                imageUrl: lwrImageUrl,
+                pdfUrl: lwrPdfUrl,
+                title: lwrTitle,
+                author: lwrAuthor,
               ),
               SizedBox(
                 height: size.height * 0.04,

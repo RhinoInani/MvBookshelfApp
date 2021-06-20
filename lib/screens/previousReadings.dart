@@ -28,22 +28,44 @@ class PreviousReadingsScreen extends StatelessWidget {
       body: ListView.builder(
           itemCount: itemCount,
           itemBuilder: (context, index) {
+            int counter = index;
             if (index == 0) {
               index++;
-              return ExtraPageHeader(
-                size: size,
-                text: "Previous",
-                boldText: "Readings",
+              return Column(
+                children: [
+                  ExtraPageHeader(
+                    size: size,
+                    text: "Previous",
+                    boldText: "Readings",
+                  ),
+                  WeekReading(
+                    size: size,
+                    week: "This weeks ",
+                    home: false,
+                    imageUrl: imageUrl.elementAt(counter),
+                    pdfUrl: pdfUrl.elementAt(counter),
+                    title: title.elementAt(counter),
+                    author: author.elementAt(counter),
+                  ),
+                ],
               );
             } else if (index == itemCount - 1) {
               index++;
               return OutlinedButton(onPressed: () {}, child: Text("Load more"));
             }
-            return WeekReading(
-              size: size,
-              week: "This weeks ",
-              home: false,
-            );
+            if (author.elementAt(counter) == "test") {
+              return Container();
+            } else {
+              return WeekReading(
+                size: size,
+                week: "This weeks ",
+                home: false,
+                imageUrl: imageUrl.elementAt(counter),
+                pdfUrl: pdfUrl.elementAt(counter),
+                title: title.elementAt(counter),
+                author: author.elementAt(counter),
+              );
+            }
           }),
     );
   }

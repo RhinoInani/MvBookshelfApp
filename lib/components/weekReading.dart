@@ -57,7 +57,7 @@ class WeekReading extends StatelessWidget {
           child: Container(
             height: size.height * 0.2,
             width: size.width * 0.8,
-            decoration: cardBoxDecoration(),
+            decoration: cardBoxDecoration(29),
             child: Stack(
               children: [
                 Positioned(
@@ -65,7 +65,7 @@ class WeekReading extends StatelessWidget {
                   top: (size.height * 0.02) / 2,
                   height: size.height * 0.18,
                   child: Container(
-                    decoration: cardBoxDecoration(),
+                    decoration: cardBoxDecoration(29),
                     child: ClipRRect(
                         child: Image.network(imageUrl),
                         borderRadius: BorderRadius.circular(10)),

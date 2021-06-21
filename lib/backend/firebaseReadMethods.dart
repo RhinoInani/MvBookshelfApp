@@ -73,3 +73,35 @@ void readUpcoming() async {
     upEvent = upcomingEvents.substring(upcomingEvents.indexOf(",") + 1);
   });
 }
+
+void readAll() async {
+  pdfUrl.clear();
+  title.clear();
+  author.clear();
+  imageUrl.clear();
+  pdfUrl = new List.generate(previousCounter, (index) => "test");
+  title = new List.generate(previousCounter, (index) => "test");
+  author = new List.generate(previousCounter, (index) => "test");
+  imageUrl = new List.generate(previousCounter, (index) => "test");
+  dynamic ref = await FirebaseDatabase.instance.reference();
+  int pdfCounter = 0;
+  ref.child('Pdf').limitToLast(previousCounter).onChildAdded.listen((event) {
+    pdfUrl.insert(pdfCounter, event.snapshot.value.toString());
+    pdfCounter++;
+  });
+  int titlesCounter = 0;
+  String tempReturn = "";
+  ref.child('Titles').limitToLast(previousCounter).onChildAdded.listen((event) {
+    tempReturn = event.snapshot.value.toString();
+    title.insert(
+        titlesCounter, tempReturn.substring(0, tempReturn.indexOf(",")));
+    author.insert(
+        titlesCounter, tempReturn.substring(tempReturn.indexOf(",") + 1));
+    titlesCounter++;
+  });
+  int imageCounter = 0;
+  ref.child('Image').limitToLast(previousCounter).onChildAdded.listen((event) {
+    imageUrl.insert(imageCounter, event.snapshot.value.toString());
+    imageCounter++;
+  });
+}

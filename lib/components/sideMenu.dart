@@ -1,8 +1,7 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
-import 'package:mv_bookshelf/backend/firebaseReturn.dart';
+import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
@@ -96,7 +95,6 @@ class _SideMenuState extends State<SideMenu> {
                   text: "Upcoming Events",
                   icon: Icon(CupertinoIcons.calendar),
                   press: () {
-                    print(DateTime.now().month);
                     Navigator.of(context).pop();
                   }),
               DrawerCard(
@@ -118,40 +116,5 @@ class _SideMenuState extends State<SideMenu> {
         ),
       ),
     );
-  }
-
-  void readAll() async {
-    dynamic ref = await FirebaseDatabase.instance.reference();
-    int pdfCounter = 0;
-    ref.child('Pdf').limitToLast(previousCounter).onChildAdded.listen((event) {
-      pdfUrl.insert(pdfCounter, event.snapshot.value.toString());
-      pdfCounter++;
-    });
-    int titlesCounter = 0;
-    String tempReturn = "";
-    ref
-        .child('Titles')
-        .limitToLast(previousCounter)
-        .onChildAdded
-        .listen((event) {
-      tempReturn = event.snapshot.value.toString();
-      title.insert(
-          titlesCounter, tempReturn.substring(0, tempReturn.indexOf(",")));
-      print(titlesCounter);
-      print(title.elementAt(titlesCounter));
-      author.insert(
-          titlesCounter, tempReturn.substring(tempReturn.indexOf(",") + 1));
-      print(author.elementAt(titlesCounter));
-      titlesCounter++;
-    });
-    int imageCounter = 0;
-    ref
-        .child('Image')
-        .limitToLast(previousCounter)
-        .onChildAdded
-        .listen((event) {
-      imageUrl.insert(imageCounter, event.snapshot.value.toString());
-      imageCounter++;
-    });
   }
 }

@@ -42,7 +42,7 @@ class UpcomingCard extends StatelessWidget {
             child: Container(
           height: size.height * 0.2,
           width: size.width * 0.8,
-          decoration: cardBoxDecoration(),
+          decoration: cardBoxDecoration(29),
           child: Stack(
             children: [
               Positioned(

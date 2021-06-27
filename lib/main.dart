@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Book App',
+      title: 'Bookshelf App',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         dividerTheme: DividerThemeData(

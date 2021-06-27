@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
-
-//todo: check connections, using connectivity package or some sort
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key key}) : super(key: key);
@@ -16,32 +15,49 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool internet = true;
   void initializeFlutterFire() async {
     try {
+      await isInternet();
       await Firebase.initializeApp();
-      setState(() async {
-        await readTitles();
-        await readPdfUrl();
-        await readImageUrl();
-        await readUpcoming();
-      });
-    } catch (e) {
-      setState(() {});
+      if (internet) {
+        setState(() async {
+          await readTitles();
+          await readPdfUrl();
+          await readImageUrl();
+          await readUpcoming();
+        });
+      }
+    } catch (e) {}
+  }
+
+  Future<void> isInternet() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        internet = true;
+        print(internet);
+      }
+    } on SocketException catch (e) {
+      internet = false;
+      print(internet);
     }
   }
 
   @override
   void initState() {
-    initializeFlutterFire();
     super.initState();
+    initializeFlutterFire();
     setState(() {
       currentScreen = "Home";
     });
     Timer(new Duration(milliseconds: 1500), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) {
-        return HomeScreen();
-      }));
+      if (internet) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return HomeScreen();
+        }));
+      }
     });
   }
 
@@ -49,6 +65,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     phone = size.width < 600 ? true : false;
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: internet ? Colors.white : Colors.red,
+    );
   }
 }

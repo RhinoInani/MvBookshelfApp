@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
           await readPdfUrl();
           await readImageUrl();
           await readUpcoming();
+          await readCount();
         });
       }
     } catch (e) {}
@@ -36,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
       final result = await InternetAddress.lookup('example.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         internet = true;
-        print(internet);
       }
     } on SocketException catch (e) {
       internet = false;

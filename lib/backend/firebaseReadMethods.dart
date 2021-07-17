@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 
-void readTitles() async {
+Future<void> readTitles() async {
   int counterTitles = 0;
   String tempReturn;
   await FirebaseDatabase.instance
@@ -23,7 +23,7 @@ void readTitles() async {
   });
 }
 
-void readPdfUrl() async {
+Future<void> readPdfUrl() async {
   int counterPdf = 0;
   await FirebaseDatabase.instance
       .reference()
@@ -40,7 +40,7 @@ void readPdfUrl() async {
   });
 }
 
-void readImageUrl() async {
+Future<void> readImageUrl() async {
   int counterImage = 0;
   await FirebaseDatabase.instance
       .reference()
@@ -57,7 +57,19 @@ void readImageUrl() async {
   });
 }
 
-void readUpcoming() async {
+Future<void> readCount() async {
+  final ref = await FirebaseDatabase.instance.reference();
+  String input;
+  ref.child("Count").onValue.listen(
+    (event) {
+      input = event.snapshot.value.toString();
+      previousCounter = int.parse(input.substring(0, input.indexOf(",")));
+      upcomingCounter = int.parse(input.substring(input.indexOf(',') + 1));
+    },
+  );
+}
+
+Future<void> readUpcoming() async {
   String upcomingEvents;
   await FirebaseDatabase.instance
       .reference()
@@ -69,21 +81,19 @@ void readUpcoming() async {
     upMonth =
         int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf("/")));
     upDay = int.parse(upcomingEvents.substring(
-        upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf(",")));
-    upEvent = upcomingEvents.substring(upcomingEvents.indexOf(",") + 1);
+        upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf("~")));
+    upYear = int.parse(upcomingEvents.substring(
+        upcomingEvents.indexOf("~") + 1, upcomingEvents.indexOf("`")));
+    upEvent = upcomingEvents.substring(upcomingEvents.indexOf("`") + 1);
   });
 }
 
-void readAll() async {
-  pdfUrl.clear();
-  title.clear();
-  author.clear();
-  imageUrl.clear();
+Future<void> readAllReadings() async {
+  final ref = FirebaseDatabase.instance.reference();
   pdfUrl = new List.generate(previousCounter, (index) => "test");
   title = new List.generate(previousCounter, (index) => "test");
   author = new List.generate(previousCounter, (index) => "test");
   imageUrl = new List.generate(previousCounter, (index) => "test");
-  dynamic ref = await FirebaseDatabase.instance.reference();
   int pdfCounter = 0;
   ref.child('Pdf').limitToLast(previousCounter).onChildAdded.listen((event) {
     pdfUrl.insert(pdfCounter, event.snapshot.value.toString());
@@ -104,4 +114,33 @@ void readAll() async {
     imageUrl.insert(imageCounter, event.snapshot.value.toString());
     imageCounter++;
   });
+}
+
+Future<void> readAllUpcoming() async {
+  String upcomingEvents;
+  allUpcomingDates =
+      new List.generate(previousCounter, (index) => DateTime(2005, 6, 30));
+  allUpcomingEvents = new List.generate(previousCounter, (index) => "test");
+  int counter = 0;
+  await FirebaseDatabase.instance
+      .reference()
+      .child('Upcoming')
+      .onChildAdded
+      .listen(
+    (event) {
+      upcomingEvents = event.snapshot.value.toString();
+      int month =
+          int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf("/")));
+      int day = int.parse(upcomingEvents.substring(
+          upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf("~")));
+      int year = int.parse(upcomingEvents.substring(
+          upcomingEvents.indexOf("~") + 1, upcomingEvents.indexOf("`")));
+      String events = upcomingEvents.substring(upcomingEvents.indexOf("`") + 1);
+
+      allUpcomingDates.insert(counter, DateTime(year, month, day));
+      allUpcomingEvents.insert(counter, events);
+
+      counter++;
+    },
+  );
 }

@@ -6,6 +6,7 @@ import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/components/drawerCard.dart';
 import 'package:mv_bookshelf/screens/home_screen.dart';
 import 'package:mv_bookshelf/screens/previousReadings.dart';
+import 'package:mv_bookshelf/screens/upcomingEvents.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
@@ -83,7 +84,8 @@ class _SideMenuState extends State<SideMenu> {
                       setState(() {
                         currentScreen = "PR";
                       });
-                      await readAll();
+                      await readCount();
+                      await readAllReadings();
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return PreviousReadingsScreen();
@@ -94,8 +96,20 @@ class _SideMenuState extends State<SideMenu> {
                   size: widget.size,
                   text: "Upcoming Events",
                   icon: Icon(CupertinoIcons.calendar),
-                  press: () {
-                    Navigator.of(context).pop();
+                  press: () async {
+                    if (currentScreen == "UE") {
+                      Navigator.of(context).pop();
+                    } else {
+                      setState(() {
+                        currentScreen = "UE";
+                      });
+                      await readCount();
+                      await readAllUpcoming();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return UpcomingEventsScreen();
+                      }));
+                    }
                   }),
               DrawerCard(
                   size: widget.size,

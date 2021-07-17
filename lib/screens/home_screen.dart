@@ -1,9 +1,9 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
+import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/backend/userSettings.dart';
 import 'package:mv_bookshelf/components/sideMenu.dart';
@@ -26,93 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await readUpcoming();
   }
 
-  void readTitles() async {
-    int counterTitles = 0;
-    String tempReturn;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Titles')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterTitles == 0) {
-        setState(() {
-          tempReturn = event.snapshot.value.toString();
-          lwrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
-          lwrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
-          counterTitles++;
-        });
-      } else {
-        setState(() {
-          tempReturn = event.snapshot.value.toString();
-          twrTitle = tempReturn.substring(0, tempReturn.indexOf(","));
-          twrAuthor = tempReturn.substring(tempReturn.indexOf(",") + 1);
-        });
-      }
-    });
-  }
-
-  void readPdfUrl() async {
-    int counterPdf = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Pdf')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterPdf == 0) {
-        setState(() {
-          lwrPdfUrl = event.snapshot.value.toString();
-          counterPdf++;
-        });
-      } else {
-        setState(() {
-          twrPdfUrl = event.snapshot.value.toString();
-        });
-      }
-    });
-  }
-
-  void readImageUrl() async {
-    int counterImage = 0;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Image')
-        .limitToLast(2)
-        .onChildAdded
-        .listen((event) {
-      if (counterImage == 0) {
-        setState(() {
-          lwrImageUrl = event.snapshot.value.toString();
-          counterImage++;
-        });
-      } else {
-        setState(() {
-          twrImageUrl = event.snapshot.value.toString();
-        });
-      }
-    });
-  }
-
-  void readUpcoming() async {
-    String upcomingEvents;
-    await FirebaseDatabase.instance
-        .reference()
-        .child('Upcoming')
-        .limitToLast(1)
-        .onChildAdded
-        .listen((event) {
-      setState(() {
-        upcomingEvents = event.snapshot.value.toString();
-        upMonth =
-            int.parse(upcomingEvents.substring(0, upcomingEvents.indexOf("/")));
-        upDay = int.parse(upcomingEvents.substring(
-            upcomingEvents.indexOf("/") + 1, upcomingEvents.indexOf(",")));
-        upEvent = upcomingEvents.substring(upcomingEvents.indexOf(",") + 1);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -120,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
     Size size = MediaQuery.of(context).size;
 
-    DateTime date = DateTime(DateTime.now().year, upMonth, upDay);
+    DateTime date = DateTime(upYear, upMonth, upDay);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -204,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
               UpcomingCard(
                 size: size,
                 date: date,
+                title: upEvent,
               ),
             ],
           ),

@@ -12,10 +12,16 @@ String lwrAuthor;
 
 int upMonth;
 int upDay;
+int upYear;
 String upEvent;
 
-int previousCounter = 5;
-List<String> pdfUrl = List.generate(previousCounter, (index) => "test");
-List<String> imageUrl = List.generate(previousCounter, (index) => "test");
-List<String> title = List.generate(previousCounter, (index) => "test");
-List<String> author = List.generate(previousCounter, (index) => "test");
+int previousCounter;
+
+List<String> pdfUrl;
+List<String> imageUrl;
+List<String> title;
+List<String> author;
+
+int upcomingCounter;
+List<DateTime> allUpcomingDates;
+List<String> allUpcomingEvents;

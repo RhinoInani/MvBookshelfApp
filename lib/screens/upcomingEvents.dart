@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
+import 'package:mv_bookshelf/backend/firebaseReadMethods.dart';
 import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/extraPageHeader.dart';
 import 'package:mv_bookshelf/components/sideMenu.dart';
@@ -13,6 +14,16 @@ class UpcomingEventsScreen extends StatefulWidget {
 }
 
 class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
+  Future<void> _refresh() async {
+    await readCount();
+    await readAllUpcoming();
+    // setState(() {
+    //   allUpcomingDates;
+    //   allUpcomingEvents;
+    //   upcomingCounter;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -27,36 +38,43 @@ class _UpcomingEventsScreenState extends State<UpcomingEventsScreen> {
         elevation: 0,
       ),
       backgroundColor: beigeGreen,
-      body: ListView.builder(
-          itemCount: upcomingCounter,
-          itemBuilder: (BuildContext context, index) {
-            if (index == 0) {
-              index++;
-              return Column(
-                children: [
-                  ExtraPageHeader(
-                    size: size,
-                    text: "Upcoming",
-                    boldText: "Events",
-                  ),
-                  UpcomingCard(
-                    size: size,
-                    date: allUpcomingDates.elementAt(index),
-                    title: allUpcomingEvents.elementAt(index),
-                  ),
-                ],
-              );
-            }
-            if (allUpcomingEvents.elementAt(index) == "test") {
-              return Container();
-            } else {
-              return UpcomingCard(
-                size: size,
-                date: allUpcomingDates.elementAt(index),
-                title: allUpcomingEvents.elementAt(index),
-              );
-            }
-          }),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _refresh();
+        },
+        color: beigeGreen.withOpacity(0.85),
+        backgroundColor: backGrey,
+        child: ListView.builder(
+            itemCount: upcomingCounter,
+            itemBuilder: (BuildContext context, index) {
+              if (index == 0) {
+                return Column(
+                  children: [
+                    ExtraPageHeader(
+                      size: size,
+                      text: "Upcoming",
+                      boldText: "Events",
+                    ),
+                    UpcomingCard(
+                      size: size,
+                      date: allUpcomingDates.elementAt(index),
+                      title: allUpcomingEvents.elementAt(index),
+                      home: false,
+                    ),
+                  ],
+                );
+              } else if (allUpcomingEvents.elementAt(index) == "test") {
+                return Container();
+              } else {
+                return UpcomingCard(
+                  size: size,
+                  date: allUpcomingDates.elementAt(index),
+                  title: allUpcomingEvents.elementAt(index),
+                  home: false,
+                );
+              }
+            }),
+      ),
     );
   }
 }

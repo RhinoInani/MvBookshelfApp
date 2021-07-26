@@ -24,6 +24,20 @@ class _HomeScreenState extends State<HomeScreen> {
     await readImageUrl();
 
     await readUpcoming();
+    setState(() {
+      twrAuthor;
+      twrTitle;
+      twrPdfUrl;
+      twrImageUrl;
+      lwrAuthor;
+      lwrTitle;
+      lwrPdfUrl;
+      lwrImageUrl;
+      upMonth;
+      upDay;
+      upYear;
+      upEvent;
+    });
   }
 
   @override
@@ -118,16 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: size,
                 date: date,
                 title: upEvent,
+                home: true,
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

@@ -32,7 +32,8 @@ class _PreviousReadingsScreenState extends State<PreviousReadingsScreen> {
       ),
       backgroundColor: beigeGreen,
       body: RefreshIndicator(
-        color: Color.fromRGBO(110, 120, 107, 0.85),
+        color: beigeGreen.withOpacity(0.85),
+        backgroundColor: backGrey,
         onRefresh: () async {
           await readCount();
           await readAllReadings();

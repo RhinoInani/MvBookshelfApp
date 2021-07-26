@@ -60,13 +60,18 @@ class _SideMenuState extends State<SideMenu> {
                   size: widget.size,
                   text: "Home",
                   icon: Icon(CupertinoIcons.home),
-                  press: () {
+                  press: () async {
                     if (currentScreen == "Home") {
                       Navigator.of(context).pop();
                     } else {
                       setState(() {
                         currentScreen = "Home";
                       });
+                      await readTitles();
+                      await readPdfUrl();
+                      await readImageUrl();
+                      await readUpcoming();
+
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
                         return HomeScreen();
@@ -93,38 +98,50 @@ class _SideMenuState extends State<SideMenu> {
                     }
                   }),
               DrawerCard(
-                  size: widget.size,
-                  text: "Upcoming Events",
-                  icon: Icon(CupertinoIcons.calendar),
-                  press: () async {
-                    if (currentScreen == "UE") {
-                      Navigator.of(context).pop();
-                    } else {
-                      setState(() {
-                        currentScreen = "UE";
-                      });
-                      await readCount();
-                      await readAllUpcoming();
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return UpcomingEventsScreen();
-                      }));
-                    }
-                  }),
-              DrawerCard(
-                  size: widget.size,
-                  text: "Settings",
-                  icon: Icon(Icons.settings),
-                  press: () {
+                size: widget.size,
+                text: "Upcoming Events",
+                icon: Icon(CupertinoIcons.calendar),
+                press: () async {
+                  if (currentScreen == "UE") {
                     Navigator.of(context).pop();
-                  }),
+                  } else {
+                    setState(() {
+                      currentScreen = "UE";
+                    });
+                    await readCount();
+                    await readAllUpcoming();
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return UpcomingEventsScreen();
+                    }));
+                  }
+                },
+              ),
               DrawerCard(
-                  size: widget.size,
-                  text: "About Us",
-                  icon: Icon(CupertinoIcons.info_circle),
-                  press: () {
-                    Navigator.of(context).pop();
-                  }),
+                size: widget.size,
+                text: "Meeting Notes",
+                icon: Icon(Icons.notes),
+                press: () async {
+                  await readMeetingNotes();
+                  Navigator.of(context).pop();
+                },
+              ),
+              DrawerCard(
+                size: widget.size,
+                text: "Settings",
+                icon: Icon(Icons.settings),
+                press: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              DrawerCard(
+                size: widget.size,
+                text: "About Us",
+                icon: Icon(CupertinoIcons.info_circle),
+                press: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
         ),

@@ -2,24 +2,28 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mv_bookshelf/backend/constants.dart';
-import 'package:mv_bookshelf/backend/firebaseReturn.dart';
 import 'package:mv_bookshelf/components/cardBoxDecoration.dart';
 
 class UpcomingCard extends StatelessWidget {
-  const UpcomingCard(
-      {Key key, @required this.size, @required this.date, @required this.title})
-      : super(key: key);
+  const UpcomingCard({
+    Key key,
+    @required this.size,
+    @required this.date,
+    @required this.title,
+    @required this.home,
+  }) : super(key: key);
 
   final Size size;
   final DateTime date;
   final String title;
+  final bool home;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        title == upEvent
+        home
             ? Padding(
                 padding: EdgeInsets.all(size.width * 0.03),
                 child: RichText(
@@ -95,21 +99,23 @@ class UpcomingCard extends StatelessWidget {
                   ),
                 ),
                 Positioned.fill(
-                    right: size.width * 0.1,
-                    child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: size.width * 0.25,
-                          child: AutoSizeText(
-                            "$title",
-                            softWrap: true,
-                            wrapWords: false,
-                            maxLines: 4,
-                            style: TextStyle(
-                                fontSize: size.width * 0.1,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )))
+                  right: size.width * 0.1,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      width: size.width * 0.25,
+                      child: AutoSizeText(
+                        "$title",
+                        softWrap: true,
+                        wrapWords: false,
+                        maxLines: 4,
+                        style: TextStyle(
+                            fontSize: size.width * 0.1,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

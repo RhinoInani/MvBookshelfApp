@@ -74,7 +74,7 @@ Future<void> readUpcoming() async {
   await FirebaseDatabase.instance
       .reference()
       .child('Upcoming')
-      .limitToLast(1)
+      .limitToFirst(1)
       .onChildAdded
       .listen((event) {
     upcomingEvents = event.snapshot.value.toString();
@@ -119,14 +119,10 @@ Future<void> readAllReadings() async {
 Future<void> readAllUpcoming() async {
   String upcomingEvents;
   allUpcomingDates =
-      new List.generate(previousCounter, (index) => DateTime(2005, 6, 30));
-  allUpcomingEvents = new List.generate(previousCounter, (index) => "test");
+      new List.generate(upcomingCounter, (index) => DateTime(2005, 6, 30));
+  allUpcomingEvents = new List.generate(upcomingCounter, (index) => "test");
   int counter = 0;
-  await FirebaseDatabase.instance
-      .reference()
-      .child('Upcoming')
-      .onChildAdded
-      .listen(
+  FirebaseDatabase.instance.reference().child('Upcoming').onChildAdded.listen(
     (event) {
       upcomingEvents = event.snapshot.value.toString();
       int month =
@@ -137,10 +133,20 @@ Future<void> readAllUpcoming() async {
           upcomingEvents.indexOf("~") + 1, upcomingEvents.indexOf("`")));
       String events = upcomingEvents.substring(upcomingEvents.indexOf("`") + 1);
 
+      print("$year,$month,$day");
+      print(counter);
+
       allUpcomingDates.insert(counter, DateTime(year, month, day));
       allUpcomingEvents.insert(counter, events);
 
       counter++;
     },
   );
+}
+
+Future<void> readMeetingNotes() async {
+  final ref = FirebaseDatabase.instance.reference();
+  ref.child("Meeting Notes").onValue.forEach((element) {
+    print(element.snapshot.value);
+  });
 }

@@ -92,7 +92,7 @@ class WeekReading extends StatelessWidget {
                         Container(
                           width: size.width * 0.38,
                           child: AutoSizeText(
-                            "By: ${author}",
+                            "By: $author",
                             softWrap: true,
                             wrapWords: true,
                             style: TextStyle(
